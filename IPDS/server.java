@@ -9,7 +9,7 @@ import com.sun.net.httpserver.HttpServer;
 public class Server {
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(80), 0);
-        server.createContext("/", new IpHandler());
+        server.createContext("/", new Handler());
         server.setExecutor(null);
         System.out.println("--- Starting Server ---");
         server.start();
@@ -24,5 +24,16 @@ public class Server {
             os.write(clientIp.getBytes());
             os.close();
       }
+    }
+}
+public class MySQLConector {
+    public static void main(String[] args) {
+        String connectionUrl = "jdbc:mysql://localhost:3306";
+        Connection conn = DriverManager.
+            getConnection(
+                 connectionUrl,
+                 "root",
+                 "labubuntu"
+            );
     }
 }

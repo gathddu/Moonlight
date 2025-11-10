@@ -1,0 +1,3 @@
+FROM chainguard/jdk:latest
+EXPOSE 80
+CMD java, server.java
