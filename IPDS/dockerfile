@@ -1,3 +1,4 @@
-FROM chainguard/jdk:latest
-EXPOSE 80
-CMD java, server.java
+FROM maven
+COPY . .
+EXPOSE 5432
+CMD ["mvn","compile", "exec:java", "-X"]

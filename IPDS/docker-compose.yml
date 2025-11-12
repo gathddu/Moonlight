@@ -4,11 +4,11 @@ services:
     image: mysql
     restart: always
     ports:
-      -  "8080:3306/tcp"
+      -  "1234:3306/tcp"
     environment:
       MYSQL_ROOT_PASSWORD: labubuntu
   server:
     build: .
     ports:
-      -  "80:80/tcp"
+      -  "80:5432/tcp"
 
