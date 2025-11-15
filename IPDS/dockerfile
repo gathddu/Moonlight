@@ -1,4 +1,4 @@
 FROM maven
 COPY . .
 EXPOSE 5432
-CMD ["mvn","compile", "exec:java", "-X"]
+CMD ["mvn","compile", "exec:java"]
