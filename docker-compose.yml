@@ -1,0 +1,57 @@
+services:
+
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - "1234:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: labubuntu
+      MYSQL_DATABASE: ipds_db
+
+  ipds:
+    build: ./IPDS
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: labubuntu
+      DB_NAME: ipds_db
+    depends_on:
+      - db
+
+  node-1:
+    build: ./Node
+    environment:
+      NODE_ID: node-alpha
+      IPDS_URL: http://ipds:8080
+      NODE_PORT: 8081
+      SYNC_DIR: /app/shared
+      LOG_DIR: /app/logs
+    volumes:
+      - node1-data:/app/shared
+      - node1-logs:/app/logs
+    depends_on:
+      - ipds
+
+  node-2:
+    build: ./Node
+    environment:
+      NODE_ID: node-beta
+      IPDS_URL: http://ipds:8080
+      NODE_PORT: 8081
+      SYNC_DIR: /app/shared
+      LOG_DIR: /app/logs
+    volumes:
+      - node2-data:/app/shared
+      - node2-logs:/app/logs
+    depends_on:
+      - ipds
+
+volumes:
+  node1-data:
+  node1-logs:
+  node2-data:
+  node2-logs:

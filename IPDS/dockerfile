@@ -1,4 +1,16 @@
-FROM maven
-COPY . .
-EXPOSE 5432
-CMD ["mvn","compile", "exec:java"]
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+
+# copy project files
+COPY pom.xml .
+COPY src ./src
+
+# maven and compile
+RUN apk add --no-cache maven && \
+    mvn clean compile && \
+    mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
+
+EXPOSE 8080
+
+CMD ["java", "-cp", "target/classes:target/dependency/*", "moonlight.Server"]
