@@ -7,7 +7,7 @@ import moonlight.handler.*;
 import java.net.InetSocketAddress;
 
 public class Server {
-    private static final int PORT = 5432;
+    private static final int PORT = 8080;
 
     public static void main(String[] args ) throws Exception {
         System.out.println("=================================");
