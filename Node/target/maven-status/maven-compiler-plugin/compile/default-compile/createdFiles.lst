@@ -1,0 +1,4 @@
+moonlight/node/service/IpdsClient.class
+moonlight/node/sync/SyncService.class
+moonlight/node/service/HeartbeatService.class
+moonlight/node/NodeApp.class
