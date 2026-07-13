@@ -4,11 +4,20 @@ services:
     image: mysql
     restart: always
     ports:
-      -  "1234:3306/tcp"
+      - "1234:3306/tcp"
     environment:
       MYSQL_ROOT_PASSWORD: labubuntu
+      MYSQL_DATABASE: ipds_db
+
   server:
     build: .
     ports:
-      -  "80:5432/tcp"
-
+      - "80:5432/tcp"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: labubuntu
+      DB_NAME: ipds_db
+    depends_on:
+      - db
