@@ -1,4 +1,8 @@
-Server.class
-Connector.class
-Server$Handler.class
-Server$GetIpList.class
+moonlight/handler/NodesHandler.class
+moonlight/handler/RegisterHandler.class
+moonlight/model/Node.class
+moonlight/Server.class
+moonlight/handler/LeaderHandler.class
+moonlight/db/Database.class
+moonlight/handler/HeartbeatHandler.class
+moonlight/handler/BaseHandler.class
