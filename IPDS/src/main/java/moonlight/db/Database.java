@@ -32,30 +32,43 @@ public class Database {
     }
 
     public void initialize() {
-        String createTable = """
-            CREATE TABLE IF NOT EXISTS nodes (
-                id VARCHAR(36) PRIMARY KEY,
-                node_identifier VARCHAR(255) UNIQUE NOT NULL,
-                ip_address VARCHAR(50) NOT NULL,
-                port INT NOT NULL,
-                status VARCHAR(20) DEFAULT 'ONLINE',
-                role VARCHAR(20) DEFAULT 'FOLLOWER',
-                uptime_percentage DOUBLE DEFAULT 100.0,
-                total_uptime BIGINT DEFAULT 0,
-                storage_capacity BIGINT DEFAULT 0,
-                storage_used BIGINT DEFAULT 0,
-                last_heartbeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-            """;
+    	int maxRetries = 10;
+        int delay = 3;
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
-            stmt.execute(createTable);
-            System.out.println("[DB] Tables initialized");
-        } catch (SQLException e) {
-            System.err.println("[DB] Initialization failed: " + e.getMessage());
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+                String createTable = """
+                    CREATE TABLE IF NOT EXISTS nodes (
+                        id VARCHAR(36) PRIMARY KEY,
+                        node_identifier VARCHAR(255) UNIQUE NOT NULL,
+                        ip_address VARCHAR(50) NOT NULL,
+                        port INT NOT NULL,
+                        status VARCHAR(20) DEFAULT 'ONLINE',
+                        role VARCHAR(20) DEFAULT 'FOLLOWER',
+                        uptime_percentage DOUBLE DEFAULT 100.0,
+                        total_uptime BIGINT DEFAULT 0,
+                        storage_capacity BIGINT DEFAULT 0,
+                        storage_used BIGINT DEFAULT 0,
+                        last_heartbeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                    """;
+                stmt.execute(createTable);
+                System.out.println("[DB] Tables initialized");
+                return;
+            } catch (Exception e) {
+                System.out.println("[DB] Waiting for database... attempt " + attempt + "/" + maxRetries);
+                try {
+                    Thread.sleep(delay * 1000);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
         }
+        System.err.println("[DB] Failed to connect after " + maxRetries + " attempts");
     }
+
 
     public List<Node> getAllNodes() {
         List<Node> nodes = new ArrayList<>();
