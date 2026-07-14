@@ -16,19 +16,13 @@ public class NodeApp {
 
         // register with IPDS
         IpdsClient ipds = new IpdsClient(IPDS_URL);
-        boolean registered = ipds.register(NODE_ID, NODE_PORT);
-
-        if (registered) {
-            System.out.println("[Node] Registered with IPDS,");
-        } else {
-            System.err.println("[Node] Failed to register with IPDS. Running in offline mode.");
-        }
+        registerWithRetry(ipds);
 
         // start heartbeat (sends pulse to IPDS every 30 seconds)
         HeartbeatService heartbeat = new HeartbeatService(ipds, NODE_ID);
         heartbeat.start();
 
-        // start sync service (watches for file changes)
+        // sync service (watches for file changes)
         SyncService sync = new SyncService(NODE_ID);
         sync.start();
 
@@ -46,5 +40,26 @@ public class NodeApp {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    private static void registerWithRetry(IpdsClient ipds) {
+        int maxRetries = 10;
+        int delay = 5;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            boolean registered = ipds.register(NODE_ID, NODE_PORT);
+            if (registered) {
+                System.out.println("[Node] Registered with IPDS.");
+                return;
+            }
+            System.out.println("[Node] Waiting for IPDS... attempt " + attempt + "/" + maxRetries);
+            try {
+                Thread.sleep(delay * 1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+        System.err.println("[Node] Could not register after " + maxRetries + " attempts. Running in offline mode.");
     }
 }
