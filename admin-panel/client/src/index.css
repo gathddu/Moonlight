@@ -1,0 +1,247 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-gothic: 'UnifrakturMaguntia', cursive;
+}
+
+:root {
+  --radius: 0.25rem;
+  --background: oklch(0.08 0.01 180);
+  --foreground: oklch(0.75 0.15 145);
+  --card: oklch(0.07 0.01 180);
+  --card-foreground: oklch(0.75 0.15 145);
+  --popover: oklch(0.07 0.01 180);
+  --popover-foreground: oklch(0.75 0.15 145);
+  --primary: oklch(0.75 0.15 145);
+  --primary-foreground: oklch(0.08 0.01 180);
+  --secondary: oklch(0.12 0.01 180);
+  --secondary-foreground: oklch(0.65 0.12 145);
+  --muted: oklch(0.12 0.01 180);
+  --muted-foreground: oklch(0.35 0.03 180);
+  --accent: oklch(0.10 0.01 180);
+  --accent-foreground: oklch(0.75 0.15 145);
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(0.08 0.01 180);
+  --border: oklch(0.18 0.02 180);
+  --input: oklch(0.18 0.02 180);
+  --ring: oklch(0.75 0.15 145);
+  --chart-1: oklch(0.75 0.15 145);
+  --chart-2: oklch(0.65 0.12 145);
+  --chart-3: oklch(0.55 0.10 145);
+  --chart-4: oklch(0.45 0.08 145);
+  --chart-5: oklch(0.35 0.06 145);
+  --sidebar: oklch(0.06 0.01 180);
+  --sidebar-foreground: oklch(0.75 0.15 145);
+  --sidebar-primary: oklch(0.75 0.15 145);
+  --sidebar-primary-foreground: oklch(0.08 0.01 180);
+  --sidebar-accent: oklch(0.10 0.01 180);
+  --sidebar-accent-foreground: oklch(0.75 0.15 145);
+  --sidebar-border: oklch(0.18 0.02 180);
+  --sidebar-ring: oklch(0.75 0.15 145);
+}
+
+.dark {
+  --background: oklch(0.08 0.01 180);
+  --foreground: oklch(0.75 0.15 145);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    background: #030809;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+.crt-monitor {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    #12222a 0%,
+    #0d181e 25%,
+    #0f1c22 55%,
+    #162a26 85%,
+    #1e3832 100%
+  );
+  border-radius: 14px;
+  padding: 12px 14px 8px 14px;
+  border: 1px solid #1e3338;
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.7),
+    inset 0 -2px 0 rgba(65, 111, 100, 0.2),
+    inset 0 1px 0 rgba(25, 45, 50, 0.6);
+}
+
+.crt-screen {
+  background: #03080b;
+  border-radius: 8px;
+  padding: 16px 20px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #0a1216;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+/* scanlines */
+.crt-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  z-index: 5;
+}
+
+/* green ambient */
+.crt-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(67, 200, 99, 0.008) 0%,
+    transparent 70%
+  );
+  z-index: 6;
+}
+
+.crt-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 6px;
+  padding: 0 4px;
+}
+
+.crt-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.crt-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid #1a2e34;
+}
+
+.crt-dot.active {
+  background: #4ecc65;
+  border-color: #4ecc65;
+  box-shadow: 0 0 4px #4ecc65, 0 0 8px rgba(78, 204, 101, 0.3);
+}
+
+.crt-progress {
+  margin-top: 12px;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    #43c863 0px,
+    #43c863 3px,
+    transparent 3px,
+    transparent 7px
+  );
+  opacity: 0.3;
+}
+
+.font-gothic {
+  font-family: 'UnifrakturMaguntia', cursive;
+}
+
+.nav-active {
+  background: rgba(100, 180, 200, 0.04);
+  border-left: 2px solid #96dce8;
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 100%;
+    }
+  }
+}
