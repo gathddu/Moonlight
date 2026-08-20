@@ -53,7 +53,7 @@ public class IpdsClient {
         }
     }
 
-    public String getLeader() {
+    public String[] getLeaderInfo() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(baseUrl + "/api/nodes/leader"))
@@ -62,7 +62,17 @@ public class IpdsClient {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
-                return response.body();
+                String body = response.body();
+
+		int idStart = body.indexOf("\"nodeIdentifier\":\"") + 18;
+		int idEnd = body.indexOf("\"", idStart);
+		String name = body.substring(idStart, idEnd);
+
+		int ipStart = body.indexOf("\"ipAddress\":\"") + 13;
+		int ipEnd = body.indexOf("\"", ipStart);
+		String ip = body.substring(ipStart, ipEnd);
+
+		return new String[]{name, ip};
             }
         } catch (Exception e) {
             System.err.println("[IpdsClient] Failed to get leader: " + e.getMessage());

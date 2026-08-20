@@ -23,7 +23,7 @@ public class NodeApp {
         heartbeat.start();
 
         // sync service (watches for file changes)
-        SyncService sync = new SyncService(NODE_ID);
+        SyncService sync = new SyncService(NODE_ID, ipds);
         sync.start();
 
         System.out.println("[Node] All services running.");

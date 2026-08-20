@@ -11,8 +11,7 @@ COPY src ./src
 
 # maven, compile and copy dependencies
 RUN apk add --no-cache maven && \
-    mvn clean compile && \
-    mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
+    mvn clean compile dependency:copy-dependencies -DoutputDirectory=target/dependency
 
 # create shared and logs directories
 RUN mkdir -p /app/shared /app/logs
@@ -20,5 +19,8 @@ RUN mkdir -p /app/shared /app/logs
 ENV SYNC_DIR=/app/shared
 ENV LOG_DIR=/app/logs
 
-CMD ["java", "-cp", "target/classes:target/dependency/*", "moonlight.node.NodeApp"]
+COPY rsyncd.conf /etc/rsyncd.conf
 
+EXPOSE 873
+
+CMD rsync --daemon --no-detach --config=/etc/rsyncd.conf & java -cp "target/classes:target/dependency/*" moonlight.node.NodeApp
