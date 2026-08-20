@@ -32,7 +32,7 @@ public class Database {
     }
 
     public void initialize() {
-    	int maxRetries = 10;
+    	int maxRetries = 20;
         int delay = 3;
 
         for (int attempt = 1; attempt <= maxRetries; attempt++) {

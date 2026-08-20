@@ -8,6 +8,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: labubuntu
       MYSQL_DATABASE: ipds_db
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-plabubuntu"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
 
   ipds:
     build: ./IPDS
@@ -20,7 +25,8 @@ services:
       DB_PASSWORD: labubuntu
       DB_NAME: ipds_db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   node-1:
     build: ./Node
