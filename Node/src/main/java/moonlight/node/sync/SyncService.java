@@ -61,6 +61,32 @@ public class SyncService {
         	return;
     	}
 
+	// push local changes to leader first
+        try {
+            ProcessBuilder pushPb = new ProcessBuilder(
+                "rsync", "-avz", syncDirectory.toString() + "/", "rsync://" + leaderIp + ":873/shared/"
+            );
+            pushPb.redirectErrorStream(true);
+            Process pushProcess = pushPb.start();
+
+            BufferedReader pushReader = new BufferedReader(new InputStreamReader(pushProcess.getInputStream()));
+            String pushLine;
+            while ((pushLine = pushReader.readLine()) != null) {
+                if (!pushLine.isBlank()) {
+                    appendToLog("push: " + pushLine);
+                }
+            }
+
+            int pushExit = pushProcess.waitFor();
+            if (pushExit == 0) {
+                appendToLog("Push to " + leaderName + " completed");
+            } else {
+                appendToLog("Push to " + leaderName + " failed (exit: " + pushExit + ")");
+            }
+        } catch (Exception e) {
+            System.err.println("[Sync] Push error: " + e.getMessage());
+        }
+
     	String source = "rsync://" + leaderIp + ":873/shared/";
     	String dest = syncDirectory.toString() + "/";
 
