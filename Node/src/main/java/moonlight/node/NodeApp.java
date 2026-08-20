@@ -8,6 +8,7 @@ public class NodeApp {
     private static final String NODE_ID = System.getenv().getOrDefault("NODE_ID", "node-" + System.currentTimeMillis());
     private static final String IPDS_URL = System.getenv().getOrDefault("IPDS_URL", "http://localhost:8080" );
     private static final int NODE_PORT = Integer.parseInt(System.getenv().getOrDefault("NODE_PORT", "8081"));
+    private static final int LEADER_PRIORITY = Integer.parseInt(System.getenv().getOrDefault("LEADER_PRIORITY", "1"));
 
     public static void main(String[] args) {
         System.out.println("=================================");
@@ -47,7 +48,7 @@ public class NodeApp {
         int delay = 5;
 
         for (int attempt = 1; attempt <= maxRetries; attempt++) {
-            boolean registered = ipds.register(NODE_ID, NODE_PORT);
+            boolean registered = ipds.register(NODE_ID, NODE_PORT, LEADER_PRIORITY);
             if (registered) {
                 System.out.println("[Node] Registered with IPDS.");
                 return;

@@ -49,6 +49,7 @@ public class Database {
                         total_uptime BIGINT DEFAULT 0,
                         storage_capacity BIGINT DEFAULT 0,
                         storage_used BIGINT DEFAULT 0,
+			leader_priority INT DEFAULT 1,
                         last_heartbeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     )
@@ -105,7 +106,7 @@ public class Database {
     }
 
     public Node getLeader() {
-        String query = "SELECT * FROM nodes WHERE status = 'ONLINE' ORDER BY uptime_percentage DESC LIMIT 1";
+        String query = "SELECT * FROM nodes WHERE status = 'ONLINE' ORDER BY leader_priority DESC, uptime_percentage DESC LIMIT 1";
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();
@@ -120,11 +121,11 @@ public class Database {
         return null;
     }
 
-    public void registerNode(String nodeIdentifier, String ipAddress, int port) {
+    public void registerNode(String nodeIdentifier, String ipAddress, int port, int priority) {
         String query = """
-            INSERT INTO nodes (id, node_identifier, ip_address, port, status, role, uptime_percentage, last_heartbeat)
-            VALUES (?, ?, ?, ?, 'ONLINE', 'FOLLOWER', 100.0, NOW())
-            ON DUPLICATE KEY UPDATE ip_address = ?, port = ?, status = 'ONLINE', last_heartbeat = NOW()
+            INSERT INTO nodes (id, node_identifier, ip_address, port, status, role, uptime_percentage, leader_priority, last_heartbeat)
+            VALUES (?, ?, ?, ?, 'ONLINE', 'FOLLOWER', 100.0, ?, NOW())
+            ON DUPLICATE KEY UPDATE ip_address = ?, port = ?, leader_priority = ?, status = 'ONLINE', last_heartbeat = NOW()
             """;
 
         try (Connection conn = connect();
@@ -133,8 +134,10 @@ public class Database {
             ps.setString(2, nodeIdentifier);
             ps.setString(3, ipAddress);
             ps.setInt(4, port);
-            ps.setString(5, ipAddress);
-            ps.setInt(6, port);
+	    ps.setInt(5, priority);
+            ps.setString(6, ipAddress);
+            ps.setInt(7, port);
+	    ps.setInt(8, priority);
             ps.execute();
             System.out.println("[DB] Node registered: " + nodeIdentifier);
         } catch (SQLException e) {

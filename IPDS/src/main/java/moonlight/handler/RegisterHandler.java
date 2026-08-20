@@ -21,13 +21,14 @@ public class RegisterHandler extends BaseHandler {
         String nodeIdentifier = extractJsonValue(body, "nodeIdentifier");
         String ipAddress = exchange.getRemoteAddress().getAddress().getHostAddress();
         int port = Integer.parseInt(extractJsonValue(body, "port", "8081"));
+	int priority = Integer.parseInt(extractJsonValue(body, "leaderPriority", "1"));
 
         if (nodeIdentifier.isEmpty()) {
             sendResponse(exchange, 400, "{\"error\":\"nodeIdentifier is required\"}");
             return;
         }
 
-        db.registerNode(nodeIdentifier, ipAddress, port);
+        db.registerNode(nodeIdentifier, ipAddress, port, priority);
         sendResponse(exchange, 201, "{\"status\":\"registered\",\"nodeIdentifier\":\"" + nodeIdentifier + "\"}");
     }
 }

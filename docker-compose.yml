@@ -34,6 +34,7 @@ services:
       NODE_ID: node-alpha
       IPDS_URL: http://ipds:8080
       NODE_PORT: 8081
+      LEADER_PRIORITY: 10
       SYNC_DIR: /app/shared
       LOG_DIR: /app/logs
     volumes:
@@ -48,6 +49,7 @@ services:
       NODE_ID: node-beta
       IPDS_URL: http://ipds:8080
       NODE_PORT: 8081
+      LEADER_PRIORITY: 1
       SYNC_DIR: /app/shared
       LOG_DIR: /app/logs
     volumes:

@@ -17,8 +17,8 @@ public class IpdsClient {
                 .build();
     }
 
-    public boolean register(String nodeIdentifier, int port) {
-        String json = String.format("{\"nodeIdentifier\":\"%s\",\"port\":%d}", nodeIdentifier, port);
+    public boolean register(String nodeIdentifier, int port, int leaderPriority) {
+        String json = String.format("{\"nodeIdentifier\":\"%s\",\"port\":%d,\"leaderPriority\":%d}", nodeIdentifier, port, leaderPriority);
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
